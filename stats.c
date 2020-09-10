@@ -9,13 +9,14 @@
  *
  *****************************************************************************/
 /**
- * @file <Add File Name> 
- * @brief <Add Brief Description Here >
+ * @file stats.c 
+ * @brief Implements function prototypes provided by "stats.h"
  *
- * <Add Extended Description Here>
+ * Implements the function prototypes provided by the "stats.h" file.
+ * Calculates and prints the statistics required for a given dataset.
  *
- * @author <Add FirsName LastName>
- * @date <Add date >
+ * @author Luis Eduardo Archundia Picazzo
+ * @date 09/09/2020
  *
  */
 
@@ -26,6 +27,8 @@
 
 /* Size of the Data Set */
 #define SIZE (40)
+#define TRUE  1
+#define FALSE 0
 
 void main() {
 
@@ -36,8 +39,44 @@ void main() {
                                 7,  87, 250, 230,  99,   3, 100,  90};
 
   /* Other Variable Declarations Go Here */
+  int isSortedFlag = FALSE;
+  unsigned char* arrPtr = test;
+
   /* Statistics and Printing Functions Go Here */
 
 }
 
 /* Add other Implementation File Code Here */
+
+void sort_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
+{
+}
+
+float find_minimum(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
+{
+}
+
+float find_maximum(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
+{
+}
+
+float find_mean(int arrSize, unsigned char* arrPtr)
+{
+}
+
+float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
+{
+}
+
+void print_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
+{
+}
+
+void print_statistics(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
+{
+}
+
+
+
+
+
