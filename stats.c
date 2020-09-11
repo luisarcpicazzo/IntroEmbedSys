@@ -32,6 +32,22 @@
 #define ODD   1
 #define EVEN  0
 
+
+
+#define MEDIAN_INDEX_OFFSET 1
+
+/*
+ * Indicates the first half of the array based on its
+ * size. with its offset. 0 to n-1.
+ */
+#define EVEN_HALF_ARRAY ((SIZE/2) - 1)
+
+/*
+ *  Chops the last value to get the first half of the array as an integer 
+ *  then works it out from there to get to the actual median index 
+ */
+#define ODD_HALF_ARRAY (((SIZE - 1) / 2) - 1) 
+
 void main() {
 
   unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
@@ -66,7 +82,7 @@ void main() {
   for(int it = 0; it < SIZE; it++)
   {
       if(it == SIZE - 1)
-      {
+      { 
           printf("%d ", test[it]);
       }
       else
@@ -87,7 +103,9 @@ void main() {
   printf("%f", find_mean(SIZE, test));
   printf("\n\n");
 
-  find_median(SIZE, test, isSortedFlag);
+  printf("\n\nMedian Value:\n");
+  printf("%f", find_median(SIZE, test, isSortedFlag));
+  printf("\n\n");
 
 }
 
@@ -160,8 +178,11 @@ float find_mean(int arrSize, unsigned char* arrPtr)
 
 float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 {
-
     int arrType = 0;
+    int index = 0;
+    float medianVal = 0.0f;
+    float tempVal = 0.0f;
+
     if(*isSortedFlag == FALSE)
     {
         sort_array(arrSize, arrPtr, isSortedFlag);
@@ -188,13 +209,17 @@ float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
     switch (arrType)
     {
         case EVEN:
-	    printf("even");
-            break;
+	    index = EVEN_HALF_ARRAY;
+	    tempVal = *(arrPtr + index) + *(arrPtr + index + MEDIAN_INDEX_OFFSET);
+	    medianVal = tempVal/2;
+	    break;
 
-	case ODD:
-	    printf("odd");
+       	case ODD:
+	    index = ODD_HALF_ARRAY;
+	    medianVal = *(arrPtr + index + MEDIAN_INDEX_OFFSET);
 	    break;
     }
+    return medianVal;
  
 }
 
