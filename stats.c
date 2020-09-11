@@ -83,6 +83,12 @@ void main() {
   printf("%f", find_maximum(SIZE, test, isSortedFlag));
   printf("\n\n");
 
+  printf("\n\nMean Value:\n");
+  printf("%f", find_mean(SIZE, test));
+  printf("\n\n");
+
+  find_median(SIZE, test, isSortedFlag);
+
 }
 
 /* Add other Implementation File Code Here */
@@ -141,7 +147,15 @@ float find_maximum(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 }
 
 float find_mean(int arrSize, unsigned char* arrPtr)
-{
+{   
+    float tempVal = 0.0f;
+    float meanVal = 0.0f;
+    
+    for(int i = 0; i < arrSize; i++)
+    {
+        tempVal = tempVal + *(arrPtr + i);
+    }
+    return meanVal = tempVal / arrSize; 
 }
 
 float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
@@ -150,24 +164,36 @@ float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
     int arrType = 0;
     if(*isSortedFlag == FALSE)
     {
-        sort_array(arrSize, arrPtr, isSortedFlag);     
-    }
-    if(arrSize % 2 == 0)
-    {
-        arrType = EVEN;
+        sort_array(arrSize, arrPtr, isSortedFlag);
+        if(arrSize % 2 == 0)
+        {
+            arrType = EVEN;
+        }
+        else
+        {
+            arrType = ODD;
+        }    	
     }
     else
     {
-        arrType = ODD;
+        if(arrSize % 2 == 0)
+        {
+            arrType = EVEN;
+        }  
+        else
+        {
+            arrType = ODD;
+        }
     }
-    
     switch (arrType)
     {
         case EVEN:
-             break;
+	    printf("even");
+            break;
 
 	case ODD:
-	     break;
+	    printf("odd");
+	    break;
     }
  
 }
