@@ -29,6 +29,8 @@
 #define SIZE (40)
 #define TRUE  1
 #define FALSE 0
+#define ODD   1
+#define EVEN  0
 
 void main() {
 
@@ -39,10 +41,47 @@ void main() {
                                 7,  87, 250, 230,  99,   3, 100,  90};
 
   /* Other Variable Declarations Go Here */
-  int isSortedFlag = FALSE;
+  int sortFlag = FALSE;
+  int* isSortedFlag = &sortFlag;
   unsigned char* arrPtr = test;
 
   /* Statistics and Printing Functions Go Here */
+
+  printf("\n\nUnsorted Array:\n");
+  for(int it = 0; it < SIZE; it++)
+  {
+      if(it == SIZE - 1)
+      {
+          printf("%d ", test[it]);
+      }
+      else
+      {
+          printf("%d, ", test[it]);
+      }
+  }
+ 
+  sort_array(SIZE, test, isSortedFlag);
+ 
+  printf("\n\nSorted Array:\n");
+  for(int it = 0; it < SIZE; it++)
+  {
+      if(it == SIZE - 1)
+      {
+          printf("%d ", test[it]);
+      }
+      else
+      {
+          printf("%d, ", test[it]);
+      }
+  }
+
+  printf("\n\nMinimum Value:\n");
+  printf("%f", find_minimum(SIZE, test, isSortedFlag));
+  printf("\n");
+
+  printf("\n\nMaximum Value:\n");
+  printf("%f", find_maximum(SIZE, test, isSortedFlag));
+  printf("\n\n");
 
 }
 
@@ -50,14 +89,55 @@ void main() {
 
 void sort_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 {
+    unsigned char tempVal;
+    for(int i = 0; i < arrSize; i++)
+    {
+        for(int j = 0 + i; j < arrSize; j++)
+	{
+            if(*(arrPtr + i) < *(arrPtr + j))
+	    {
+	        tempVal = *(arrPtr + i);
+		*(arrPtr + i) = *(arrPtr + j);
+		*(arrPtr + j) = tempVal;
+	    }
+	} 
+    }
+    *isSortedFlag = TRUE;
 }
 
 float find_minimum(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
-{
+{   
+    int minValIndex = arrSize - 1;
+    float minVal = 0.0f;
+
+    if(*isSortedFlag == FALSE)
+    {
+        sort_array(arrSize, arrPtr, isSortedFlag);
+        minVal = *(arrPtr + minValIndex);	
+    }
+    else
+    {
+        minVal = *(arrPtr + minValIndex);
+    }
+    return minVal;
 }
 
 float find_maximum(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 {
+    int maxValIndex = 0;
+    float maxVal = 0.0f;
+
+    if(*isSortedFlag == FALSE)
+    {
+        sort_array(arrSize, arrPtr, isSortedFlag);
+        maxVal = *(arrPtr + maxValIndex);	
+    }
+    else
+    {
+        maxVal = *(arrPtr + maxValIndex);
+    }
+    return maxVal;
+    
 }
 
 float find_mean(int arrSize, unsigned char* arrPtr)
@@ -66,6 +146,30 @@ float find_mean(int arrSize, unsigned char* arrPtr)
 
 float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 {
+
+    int arrType = 0;
+    if(*isSortedFlag == FALSE)
+    {
+        sort_array(arrSize, arrPtr, isSortedFlag);     
+    }
+    if(arrSize % 2 == 0)
+    {
+        arrType = EVEN;
+    }
+    else
+    {
+        arrType = ODD;
+    }
+    
+    switch (arrType)
+    {
+        case EVEN:
+             break;
+
+	case ODD:
+	     break;
+    }
+ 
 }
 
 void print_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
