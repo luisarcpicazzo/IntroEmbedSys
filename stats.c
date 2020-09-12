@@ -63,34 +63,8 @@ void main() {
 
   /* Statistics and Printing Functions Go Here */
 
-  printf("\n\nUnsorted Array:\n");
-  for(int it = 0; it < SIZE; it++)
-  {
-      if(it == SIZE - 1)
-      {
-          printf("%d ", test[it]);
-      }
-      else
-      {
-          printf("%d, ", test[it]);
-      }
-  }
+  print_array(SIZE, test, isSortedFlag);
  
-  sort_array(SIZE, test, isSortedFlag);
- 
-  printf("\n\nSorted Array:\n");
-  for(int it = 0; it < SIZE; it++)
-  {
-      if(it == SIZE - 1)
-      { 
-          printf("%d ", test[it]);
-      }
-      else
-      {
-          printf("%d, ", test[it]);
-      }
-  }
-
   printf("\n\nMinimum Value:\n");
   printf("%f", find_minimum(SIZE, test, isSortedFlag));
   printf("\n");
@@ -225,6 +199,47 @@ float find_median(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 
 void print_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 {
+    int it = 0;
+    int tempArraySize = (arrSize/4);
+    int pastIter = 0;
+    int tempVar = 0;
+    if(*isSortedFlag == FALSE)
+    {
+	// Print unsorted array
+	for(int it = 0; it < arrSize; it++)
+        {
+            if(it == arrSize - 1)
+            { 
+                printf("%d ", *(arrPtr + it));
+            }
+            else
+            {
+                printf("%d, ", *(arrPtr + it));
+            }
+        }
+	
+        sort_array(arrSize, arrPtr, isSortedFlag);
+	print_array(arrSize, arrPtr, isSortedFlag);
+    } 
+    else
+    {
+        // Print sorted array
+        printf("\n\nSorted Array:\n");
+	for(int it = 0; it < arrSize; it++)
+        {
+            if(it == arrSize - 1)
+            { 
+                printf("%d ", *(arrPtr + it));
+            }
+            else
+            {
+                printf("%d, ", *(arrPtr + it));
+            }
+        }
+
+        
+
+    }
 }
 
 void print_statistics(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
