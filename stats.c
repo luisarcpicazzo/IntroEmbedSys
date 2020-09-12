@@ -29,22 +29,18 @@
 #define FALSE 0
 #define ODD   1
 #define EVEN  0
-#define ODD_HALF_ARRAY (((SIZE - 1) / 2) - 1) 
-#define ONE_DIGIT_FORMAT    *(arrPtr + it) >= 0 && *(arrPtr + it) < 10
-#define TWO_DIGIT_FORMAT    *(arrPtr + it) >= 10 && *(arrPtr + it) < 100
-#define THREE_DIGIT_FORMAT  *(arrPtr + it) >= 100 && *(arrPtr + it) < 1000
-
 #define MEDIAN_INDEX_OFFSET 1
 /*
  * Indicates the first half of the array based on its
  * size. with its offset. 0 to n-1.
  */
 #define EVEN_HALF_ARRAY ((SIZE/2) - 1)
-
 /*
  *  Chops the last value to get the first half of the array as an integer 
  *  then works it out from there to get to the actual median index 
  */
+#define ODD_HALF_ARRAY (((SIZE - 1) / 2) - 1) 
+
 
 void main() {
 
@@ -184,56 +180,8 @@ void print_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 
     if(*isSortedFlag == FALSE)
     {
-	// Print unsorted array
-	printf("\n\n Unsorted Array:\n");
-	for(int it = 0; it < arrSize; it++)
-        {	
-	    if(it == 10 || it == 20 || it == 30)
-	    {
-                printf("\n");
-	    }
-            if(ONE_DIGIT_FORMAT)
-	    {
-                printf("   %d    ", *(arrPtr + it));
-	    }
-	    else if(TWO_DIGIT_FORMAT)
-	    {
-                printf("   %d   ", *(arrPtr + it));
-	    }
-	    else
-	    {
-                printf("   %d  ", *(arrPtr + it));
-	    }
-        }
-        sort_array(arrSize, arrPtr, isSortedFlag);
-	print_array(arrSize, arrPtr, isSortedFlag);
-    } 
-    else
-    {
-        // Print sorted array values
-        printf("\n\n Sorted Array:\n");
-	for(int it = 0; it < arrSize; it++)
-        {    
-	    if(it == 10 || it == 20 || it == 30)
-	    {
-                printf("\n");
-	    }
-            if(ONE_DIGIT_FORMAT)
-	    { 
-                printf("   %d    ", *(arrPtr + it));
-	    }
-	    else if(TWO_DIGIT_FORMAT)
-	    {
-                printf("   %d   ", *(arrPtr + it));
-	    }
-	    else
-	    {
-                printf("   %d  ", *(arrPtr + it));
-	    }
-        }
-
-	// Print Sorted with index
-	printf("\n\n");
+	// Print unsorted array values with indices
+        printf("\n\n\n Unsorted Array with indices:\n\n");
 	for(int it = 0; it < 10; it++)
 	{   
 	    if(it == 0)
@@ -250,8 +198,34 @@ void print_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 	{
 	    if(it == 10 || it == 20 || it == 30)
 	    {
-                printf("\n");
-               
+                printf("\n");          
+	    }
+            printf("  [%d]\t%4d\t", it, *(arrPtr + it));
+	}
+        sort_array(arrSize, arrPtr, isSortedFlag);
+	print_array(arrSize, arrPtr, isSortedFlag);
+    } 
+    else
+    {
+	// Print sorted array values with indices
+        printf("\n\n\n\n Sorted Array with indices:\n\n");
+	for(int it = 0; it < 10; it++)
+	{   
+	    if(it == 0)
+	    {
+	        printf(" [Inx]\t VAL");
+	    }
+	    else
+	    {
+	       printf("\t [Inx]\t VAL");
+	    }
+	}
+	printf("\n");
+	for(int it = 0; it < arrSize; it++)
+	{
+	    if(it == 10 || it == 20 || it == 30)
+	    {
+                printf("\n");          
 	    }
             printf("  [%d]\t%4d\t", it, *(arrPtr + it));
 	}
@@ -276,11 +250,12 @@ void print_statistics(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
 	medianVal = (int)find_median(arrSize, arrPtr, isSortedFlag);
 	maxVal    = (int)find_maximum(arrSize, arrPtr, isSortedFlag);
 	minVal    = (int)find_minimum(arrSize, arrPtr, isSortedFlag);
-	
-        printf("\n\n\n  Mean Value :\n  %d\n\n", meanVal);
-        printf("\n  Median Value :\n  %d\n\n", medianVal);
-        printf("\n  Maximum Value :\n  %d\n\n", maxVal);
-        printf("\n  Minimum Value :\n  %d\n\n", minVal);
+
+        printf("\n\n\n Calculated Statistics:\n");	
+        printf("\n  Mean Value :\t%4d\n", meanVal);
+        printf("\n  Median Value :%4d\n", medianVal);
+        printf("\n  Maximum Value :%4d\n", maxVal);
+        printf("\n  Minimum Value :%2d\n", minVal);
 	printf("\n\n");
     }
 }
