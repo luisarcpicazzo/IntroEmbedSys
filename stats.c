@@ -207,7 +207,11 @@ void print_array(int arrSize, unsigned char* arrPtr, int* isSortedFlag)
     {
 	// Print unsorted array
 	for(int it = 0; it < arrSize; it++)
-        {
+        {	
+	    if(it == 10 || it == 20 || it == 30)
+	    {
+                printf("\n");
+	    }
             if(it == arrSize - 1)
             { 
                 printf("%d ", *(arrPtr + it));
