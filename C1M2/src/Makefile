@@ -29,16 +29,21 @@ PLATFORM = HOST
 
 #Platform Specific Flags
 LINKER_FILE = msp432p401r.lds
+ARM_FLAGS = -mcpu=cortex-m4 \ 
+            -mthumb -march=armv7e-m \
+	    -mfloat-abi=hard \
+	    -mfpu=fpv4-sp-d16 \ 
+	    --specs=nosys.specs
 
 # Compiler Flags and Defines 
 COMMONFLAGS = -Wall -Werror -g -O0 -std=99
+CPPFLAGS  = -MMD -MF
 TARGET = c1m2
 
 ifeq($(PLATFORM), HOST)
   CC = gcc
   PLATFORM_TARGET = HOST
   INCLUDE_FILES = -I $(COMMON_INCLUDES)
-  CPPFLAGS = -D$(PLATFORM_TARGET)
   CFLAGS = $(COMMONFLAGS)
   LDFLAGS = -Wl
 else
@@ -46,16 +51,11 @@ else
   LD = arm-none-eabi-ld
   PLATFORM_TARGET = MSP432
   INCLUDE_FILES = -I $(COMMON_INCLUDES) $(TARGET_INCLUDES)
-  CPPFLAGS = -D$(PLATFORM_TARGET)
-  CFLAGS = -mcpu=cortex-m4 -mthumb -march=armv7e-m -mfloat-abi=hard -mfpu=fpv4-sp-d16 --specs=nosys.specs
+  CFLAGS = $(COMMONFLAGS) $(ARM_FLAGS)
   LDFLAGS = -Wl -T$(LINKER_FILE)
 endif
 
 OBJS = $(SOURCES:.c=.o)
-
-
-### TO DO: Dependency Files .d files
-### TO DO: Indvidual Object files .o files
 
 .PHONY: build
 build: compile-link
@@ -63,40 +63,41 @@ build: compile-link
 .PHONY: compile-link
 compile-link : $(TARGET).out
 
-$(TARGET).out : $(SOURCES)
+$(TARGET).out : $(OBJS)
 	#Compile all object files and link into a final executable.
 	  # MISSING size tool
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Map$(TARGET).map -o $@
+	$(CC) -D $(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -Map$(TARGET).map $^ -o $@
 
 
 .PHONY: compile-all
-compile-all : $(SOURCES) 
+compile-all : $(SOURCES) $(INCLUDE_FILES)  
 	#Compile all object files, but DO NOT link.  
 	  # $ make compile-all
-	$(CC)-c
+	$(CC) -D $(PLATFORM_TARGET) $(CFLAGS) -c $^
 
 
-%.i : %.c
-	#Generate preprocessed output of all c-program implementation files (use -E flag).
-	  #You can do this by providing a single target name:
-	  # $ make main.i
-	$(CC) -E $< $(CFLAGS) $(INCLUDE_FILES) $(CPPFLAGS) -o $@
+%.i : %.c $(INCLUDE_FILES)
+	$(CC) $(CFLAGS) -E $^ -o $@
 
 
-%.asm : %.c
-	#Generate assembly output of c-program implementation files and the final output exectuatable
-	  #(use the -S flag and the objdump utility).
-	  #You can do this by providing a single target name:
-	  # $ make main.asm
-	$(CC) -S $< -o $@ $(CFLAGS) #apply obj_dump_util
+
+%.asm : %.o
+	$(CC) objdump -S $< $(CFLAGS) $(CPPFLAGS) -o $@
 
 
-%.o : %.c
-        #Generate the object fiel for all c-source files (but do not link) by specifying the object file
-	  #you want to compile
-	  # $ make main.o
-	$(CC) -c $< $(CFLAGS) -o $@
-	
+
+$(OBJS) : %.o
+
+%.o : %.c $(INCLUDE_FILES) %.d
+	$(CC) $(CFLAGS) -c $^ -o $@ 
+
+
+
+
+%.d : %.c $(INCLUDE_FILES)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $^ -o $@
+
+
 
 .PHONY: clean
 clean:
