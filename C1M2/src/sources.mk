@@ -8,22 +8,23 @@
 # misuse of this material. 
 #
 #*****************************************************************************
- 
-COMMON_DIR = ../include/common
+
 MSP432_DIR = ../include/msp432
 CMSIS_DIR = ../include/CMSIS
 
 # Add your Source files to this variable
 SOURCES = main.c \
-	  memory.c \
-	  startup_msp432p401r_gcc.c \
-	  system_msp432p401r.c \
-	  interrupts_msp432p401r_gcc.c
+	  memory.c # \
+	  #startup_msp432p401r_gcc.c \
+	 # system_msp432p401r.c \
+	 # interrupts_msp432p401r_gcc.c
 
 # Add your include paths to this variable
 
-COMMON_INCLUDES = $(COMMON_DIR)/memory.h \
-	          $(COMMON_DIR)/platform.h
+COMMON_INCLUDES = memory.h \
+		  platform.h
+                  #../include/common/ \
+		  # ../include/common/platform.h
 
 TARGET_INCLUDES = $(MSP432_DIR)/mspr432p401r.h \
 	          $(MSP432_DIR)/msp_compatibility.h \
