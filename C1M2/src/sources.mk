@@ -17,7 +17,8 @@ CMSIS_DIR = ../include/CMSIS
 SOURCES = main.c \
 	  memory.c \
 	  startup_msp432p401r_gcc.c \
-	  system_msp432p401r.c
+	  system_msp432p401r.c \
+	  interrupts_msp432p401r_gcc.c
 
 # Add your include paths to this variable
 
@@ -31,4 +32,5 @@ TARGET_INCLUDES = $(MSP432_DIR)/mspr432p401r.h \
                   $(CMSIS_DIR)/core_cm4.h \
                   $(CMSIS_DIR)/core_cmFunc.h \
                   $(CMSIS_DIR)/core_cmdInstr.h \
-                  $(CMSIS_DIR)/core_cmSimd.h
+                  $(CMSIS_DIR)/core_cmSimd.h \
+		  $(COMMON_INCLUDES)
