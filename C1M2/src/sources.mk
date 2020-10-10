@@ -9,29 +9,25 @@
 #
 #*****************************************************************************
 
-MSP432_DIR = ../include/msp432
-CMSIS_DIR = ../include/CMSIS
+#Include Paths:
+INC_DFLT=../include/common
+INC_MSP432=../include/msp432
+INC_CMSIS=../include/CMSIS
 
-# Add your Source files to this variable
-SOURCES = main.c \
-	  memory.c # \
-	  #startup_msp432p401r_gcc.c \
-	 # system_msp432p401r.c \
-	 # interrupts_msp432p401r_gcc.c
+# Source files and headers (swtch compile)
+ifeq ($(PLATFORM),HOST)
+  SOURCES = main.c \
+	    memory.c
+  INCLUDE_PATHS=$(INC_DFLT)
+else
+  SOURCES = main.c \
+	    memory.c \
+	    startup_msp432p401r_gcc.c \
+	    system_msp432p401r.c \
+	    interrupts_msp432p401r_gcc.c
+  INCLUDE_PATHS=$(INC_DFLT) \
+		$(INC_MSP432) \
+		$(INC_CMSIS) \
+endif
 
-# Add your include paths to this variable
 
-COMMON_INCLUDES = memory.h \
-		  platform.h
-                  #../include/common/ \
-		  # ../include/common/platform.h
-
-TARGET_INCLUDES = $(MSP432_DIR)/mspr432p401r.h \
-	          $(MSP432_DIR)/msp_compatibility.h \
-	          $(MSP432_DIR)/system_msp432p401r.h \
-	          $(CMSIS_DIR)/cmsis_gcc.h \
-                  $(CMSIS_DIR)/core_cm4.h \
-                  $(CMSIS_DIR)/core_cmFunc.h \
-                  $(CMSIS_DIR)/core_cmdInstr.h \
-                  $(CMSIS_DIR)/core_cmSimd.h \
-		  $(COMMON_INCLUDES)

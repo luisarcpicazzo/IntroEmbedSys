@@ -34,8 +34,7 @@ ARM_FLAGS = -mcpu=cortex-m4 \
             -mthumb \
             -march=armv7e-m \
             -mfloat-abi=hard \
-            -mfpu=fpv4-sp-d16 \ 
-            --specs=nosys.specs
+	    -mfpu=fpv4-sp-d16 \
 
 # Compiler Flags and Defines 
 COMMONFLAGS = -Wall -Werror -g -O0 -std=c99
@@ -44,16 +43,19 @@ TARGET = c1m2
 
 ifeq ($(PLATFORM),HOST)
   CC = gcc
-  PLATFORM_TARGET = HOST 
-  INCLUDES = $(COMMON_INCLUDES)
-  CFLAGS = $(COMMONFLAGS)
+  LD =
+  PLATFORM_TARGET =HOST 
+  INCLUDES =-I$(INCLUDE_PATHS)
+  CFLAGS = $(COMMONFLAGS) -v
   LDFLAGS =-Wl,-Map=$(TARGET).map
 else
-  CC = arm-none-eabi-gcc
-  LD = arm-none-eabi-ld
-  PLATFORM_TARGET = MSP432
-  INCLUDES = -I$(TARGET_INCLUDES)
-  CFLAGS = $(COMMONFLAGS) $(ARM_FLAGS)
+  CC =arm-none-eabi-gcc
+  LD =arm-none-eabi-ld
+ # LD = arm-none-eabi-ld
+
+
+  INCLUDES = $(TARGET_INCLUDES)
+  CFLAGS = $(ARM_FLAGS) -v
   LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 endif
 
@@ -71,9 +73,9 @@ compile-link : $(TARGET).out
 #	$(CC) -D $(PLATFORM_TARGET) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -Map$(TARGET).map $^ -o $@
 
 $(TARGET).out: $(SOURCES)
-	$(CC) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(SOURCES) $(INCLUDES) 
+	$(CC) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $^ $(INCLUDES) 
 
-# Compile all object files, but DO NOT link.  
+# Compile all object files, but DO NOT link. 
 # $make compile-all
 #.PHONY: compile-all
 #compile-all : $(SOURCES) $(INCLUDES)  
