@@ -27,7 +27,7 @@ else
 	    interrupts_msp432p401r_gcc.c
   INCLUDE_PATHS=$(INC_DFLT) \
 		$(INC_MSP432) \
-		$(INC_CMSIS) \
+		$(INC_CMSIS)
 endif
 
 
