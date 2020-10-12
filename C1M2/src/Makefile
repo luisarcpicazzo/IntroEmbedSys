@@ -42,24 +42,22 @@ CPPFLAGS  = -MMD -MF
 TARGET = c1m2
 
 ifeq ($(PLATFORM),HOST)
-  CC = gcc
-  LD =
-  PLATFORM_TARGET =HOST 
-  INCLUDES =-I$(INCLUDE_PATHS)
-  CFLAGS = $(COMMONFLAGS) -v
-  LDFLAGS =-Wl,-Map=$(TARGET).map
+  CC=gcc
+  LD=
+  PLATFORM_TARGET=HOST 
+  INCLUDES=-I$(INCLUDE_PATHS)
+  CFLAGS=$(COMMONFLAGS) -v
+  LDFLAGS=-Wl,-Map=$(TARGET).map
 else
   CC =arm-none-eabi-gcc
   LD =arm-none-eabi-ld
- # LD = arm-none-eabi-ld
-
-
+  #LD = arm-none-eabi-ld
   INCLUDES = $(TARGET_INCLUDES)
   CFLAGS = $(ARM_FLAGS) -v
   LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 endif
 
-#OBJS = $(SOURCES:.c=.o)
+OBJS:=$(SOURCES:.c=.o)
 
 .PHONY: build
 build: compile-link
@@ -67,32 +65,25 @@ build: compile-link
 .PHONY: compile-link
 compile-link : $(TARGET).out
 
-# Compile all object files and link into a final executable.
-# MISSING size tool
-#$(TARGET).out :       # $(OBJS)
-#	$(CC) -D $(PLATFORM_TARGET) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -Map$(TARGET).map $^ -o $@
+# MISSING---------------> size tool, hdwre
+$(TARGET).out: $(OBJS)
+	$(CC) $(INCLUDES) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $@ $^ 
 
-$(TARGET).out: $(SOURCES)
-	$(CC) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $^ $(INCLUDES) 
-
-# Compile all object files, but DO NOT link. 
-# $make compile-all
-#.PHONY: compile-all
-#compile-all : $(SOURCES) $(INCLUDES)  
-#	$(CC) -D $(PLATFORM_TARGET) $(CFLAGS) -c
+# MISSING -------------->  hdwre
+.PHONY: compile-all
+compile-all: $(OBJS)
+	$(CC) $(INCLUDES) -D$(PLATFORM_TARGET) $(CFLAGS) -c $^ 
 
 
-#%.i : %.c $(INCLUDES)
-#	$(CC) $(CFLAGS) $(CPPFLAGS) -E $^ -o $@
+%.i: %.c
+	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -E $^ -o $@
 
+# MISSING --------------> objdumpUtil
+%.asm: %.c
+	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -S $< -o $@
 
-#%.asm : %.o
-#	$(CC) $(CFLAGS) $(CPPFLAGS) objdump -S $< -o $@
-
-
-
-#%.o : %.c %.d $(INCLUDES)
-#	$(CC) $(CFLAGS) -c $^ -o $@ 
+%.o: %.c
+	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -c $^ -o $@ 
 
 
 #%.d : %.c $(INCLUDES)
