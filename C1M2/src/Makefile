@@ -23,12 +23,11 @@
 #------------------------------------------------------------------------------
 include sources.mk
 
-
 # Platform Overrides
-PLATFORM = HOST
+PLATFORM=HOST
 
 #Platform Specific Flags
-LINKER_FILE = msp432p401r.lds
+LINKER_FILE=msp432p401r.lds
 
 ARM_FLAGS = -mcpu=cortex-m4 \
             -mthumb \
@@ -37,27 +36,28 @@ ARM_FLAGS = -mcpu=cortex-m4 \
 	    -mfpu=fpv4-sp-d16 \
 
 # Compiler Flags and Defines 
-COMMONFLAGS = -Wall -Werror -g -O0 -std=c99
-CPPFLAGS  = -MMD -MF
-TARGET = c1m2
+COMMONFLAGS=-Wall -Werror -g -O0 -std=c99
+CPPFLAGS=-MM
+TARGET=c1m2
 
 ifeq ($(PLATFORM),HOST)
   CC=gcc
   LD=
-  PLATFORM_TARGET=HOST 
+  PLATFORM_TARGET=HOST
   INCLUDES=-I$(INCLUDE_PATHS)
   CFLAGS=$(COMMONFLAGS) -v
   LDFLAGS=-Wl,-Map=$(TARGET).map
 else
   CC =arm-none-eabi-gcc
   LD =arm-none-eabi-ld
-  #LD = arm-none-eabi-ld
-  INCLUDES = $(TARGET_INCLUDES)
-  CFLAGS = $(ARM_FLAGS) -v
-  LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
+  #LD=arm-none-eabi-ld
+  INCLUDES=$(TARGET_INCLUDES)
+  CFLAGS=$(ARM_FLAGS) -v
+  LDFLAGS=-Wl,-Map=$(TARGET).map -T$(LINKER_FILE)
 endif
 
 OBJS:=$(SOURCES:.c=.o)
+DEPS:=$(OBJS:.o=.d)
 
 .PHONY: build
 build: compile-link
@@ -67,12 +67,12 @@ compile-link : $(TARGET).out
 
 # MISSING---------------> size tool, hdwre
 $(TARGET).out: $(OBJS)
-	$(CC) $(INCLUDES) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $@ $^ 
+	$(CC) $(INCLUDES) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 # MISSING -------------->  hdwre
 .PHONY: compile-all
 compile-all: $(OBJS)
-	$(CC) $(INCLUDES) -D$(PLATFORM_TARGET) $(CFLAGS) -c $^ 
+	$(CC) $(INCLUDES) -D$(PLATFORM_TARGET) $(CFLAGS) -c $^
 
 
 %.i: %.c
@@ -82,14 +82,10 @@ compile-all: $(OBJS)
 %.asm: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -S $< -o $@
 
+-include $(DEPS)
 %.o: %.c
-	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -c $^ -o $@ 
-
-
-#%.d : %.c $(INCLUDES)
-#	$(CC) $(CFLAGS) $(CPPFLAGS) -c $^ -o $@
-
-
+	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -c $^ -o $@
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -D$(PLATFORM_TARGET) $*.c > $*.d
 
 .PHONY: clean
 clean:
