@@ -71,8 +71,8 @@ compile-link : $(TARGET).out
 # MISSING ---------------> hdwre
 $(TARGET).out: $(OBJS)
 	$(CC) $(INCLUDES) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $@ $^
-	$(SZTUL_SZFGS) $(OBJS)
-	$(SZTUL_SZFGS) $(OBJS) > sizeReport.txt
+	$(SZTUL_SZFGS) $^                  # Print report to shell.
+	$(SZTUL_SZFGS) $^ > sizeReport.txt # Output report to .txt file.
 
 
 # MISSING -------------->  hdwre
