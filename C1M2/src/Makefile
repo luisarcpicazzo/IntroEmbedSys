@@ -33,7 +33,7 @@ ARM_FLAGS = -mcpu=cortex-m4 \
             -mthumb \
             -march=armv7e-m \
             -mfloat-abi=hard \
-	    -mfpu=fpv4-sp-d16 \
+	    -mfpu=fpv4-sp-d16
 
 # Compiler Flags and Defines 
 COMMONFLAGS=-Wall -Werror -g -O0 -std=c99
@@ -42,6 +42,7 @@ TARGET=c1m2
 
 ifeq ($(PLATFORM),HOST)
   CC=gcc
+  SZTUL_SZFGS=size --format=gnu
   LD=
   PLATFORM_TARGET=HOST
   INCLUDES=-I$(INCLUDE_PATHS)
@@ -65,9 +66,14 @@ build: compile-link
 .PHONY: compile-link
 compile-link : $(TARGET).out
 
-# MISSING---------------> size tool, hdwre
+
+
+# MISSING ---------------> hdwre
 $(TARGET).out: $(OBJS)
 	$(CC) $(INCLUDES) $(LD) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	$(SZTUL_SZFGS) $(OBJS)
+	$(SZTUL_SZFGS) $(OBJS) > sizeReport.txt
+
 
 # MISSING -------------->  hdwre
 .PHONY: compile-all
@@ -82,12 +88,14 @@ compile-all: $(OBJS)
 %.asm: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -S $< -o $@
 
+
 -include $(DEPS)
 %.o: %.c
 	$(CC) $(INCLUDES) $(CFLAGS) -D$(PLATFORM_TARGET) -c $^ -o $@
 	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -D$(PLATFORM_TARGET) $*.c > $*.d
 
+
 .PHONY: clean
 clean:
-	rm -f *.map *.out *.o *.asm *.d *.i c1m2
+	rm -f *.map *.out *.o *.asm *.d *.i *.txt
 
