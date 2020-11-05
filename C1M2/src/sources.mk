@@ -15,19 +15,19 @@ INC_MSP432=../include/msp432
 INC_CMSIS=../include/CMSIS
 
 # Source files and headers (swtch compile)
-ifeq ($(PLATFORM),HOST)
-  SOURCES = main.c \
-	    memory.c
-  INCLUDE_PATHS=$(INC_DFLT)
-else
+ifeq ($(PLATFORM),MSP432)
   SOURCES = main.c \
 	    memory.c \
 	    startup_msp432p401r_gcc.c \
 	    system_msp432p401r.c \
-	    interrupts_msp432p401r_gcc.c
+	    interrupts_msp432p401r_gcc.c		
   INCLUDE_PATHS=$(INC_DFLT) \
-		$(INC_MSP432) \
-		$(INC_CMSIS)
+		-I$(INC_MSP432) \
+		-I$(INC_CMSIS) 
+else 	
+  SOURCES = main.c \
+	    memory.c
+  INCLUDE_PATHS=$(INC_DFLT)
 endif
 
 
