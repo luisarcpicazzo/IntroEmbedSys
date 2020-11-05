@@ -16,9 +16,15 @@
 #
 # Build Targets:
 #      <Put a description of the supported targets here>
+#      <FILE>.o    - Builds <FILE>.o object files
+#      <FILE>.i    - Builds <FILE>.i preprocessed output
+#      <FILE>.asm  - Builds <FILE>.asm assembly files
+#      compile-all - Compiles all object files but does not link
+#      build       - Compiles and links to final executable
+#      clean       - Removes all generated files
 #
 # Platform Overrides:
-#      <Put a description of the supported Overrides here
+#      PLATFORM    -MSP432 or HOST
 #
 #------------------------------------------------------------------------------
 include sources.mk
@@ -65,10 +71,7 @@ OBJS:=$(SOURCES:.c=.o)
 DEPS:=$(OBJS:.o=.d)
 
 .PHONY: build
-build: compile-link
-
-.PHONY: compile-link
-compile-link : $(TARGET).out
+build: $(TARGET).out
 
 $(TARGET).out: $(OBJS)
 	$(CC) $(INCLUDES) -D$(PLATFORM_TARGET) $(CFLAGS) $(LDFLAGS) -o $@ $^
